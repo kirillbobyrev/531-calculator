@@ -9,6 +9,8 @@ interface SettingsViewProps {
 
 export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) => {
 
+  const [tmDrafts, setTmDrafts] = React.useState<Record<string, string>>({});
+
   const updateExercise = (id: string, field: keyof Exercise, value: string | number) => {
     const newExercises = settings.exercises.map((ex) => {
       if (ex.id === id) {
@@ -33,6 +35,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
       ...settings,
       exercises: settings.exercises.filter((ex) => ex.id !== id),
     });
+    setTmDrafts((prev) => {
+      if (!(id in prev)) {
+        return prev;
+      }
+      const { [id]: _, ...rest } = prev;
+      return rest;
+    });
   };
 
   const moveExercise = (from: number, to: number) => {
@@ -51,6 +60,54 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
     updatedExercises.splice(to, 0, item);
 
     setSettings({ ...settings, exercises: updatedExercises });
+  };
+
+  const handleTrainingMaxFocus = (
+    event: React.FocusEvent<HTMLInputElement>,
+    exercise: Exercise
+  ) => {
+    const target = event.currentTarget;
+    setTmDrafts((prev) => {
+      if (prev[exercise.id] !== undefined) {
+        return prev;
+      }
+      return { ...prev, [exercise.id]: exercise.trainingMax.toString() };
+    });
+
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        target.select();
+      });
+    } else {
+      target.select();
+    }
+  };
+
+  const handleTrainingMaxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    exerciseId: string
+  ) => {
+    const rawValue = event.target.value;
+    setTmDrafts((prev) => ({ ...prev, [exerciseId]: rawValue }));
+
+    if (rawValue === '' || rawValue === '.') {
+      return;
+    }
+
+    const parsedValue = parseFloat(rawValue);
+    if (!Number.isNaN(parsedValue)) {
+      updateExercise(exerciseId, 'trainingMax', parsedValue);
+    }
+  };
+
+  const handleTrainingMaxBlur = (exerciseId: string) => {
+    setTmDrafts((prev) => {
+      if (prev[exerciseId] === undefined) {
+        return prev;
+      }
+      const { [exerciseId]: _, ...rest } = prev;
+      return rest;
+    });
   };
 
   return (
@@ -113,9 +170,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <input
-                    type="number"
-                    value={ex.trainingMax}
-                    onChange={(e) => updateExercise(ex.id, 'trainingMax', parseFloat(e.target.value) || 0)}
+                    type="text"
+                    value={tmDrafts[ex.id] ?? ex.trainingMax.toString()}
+                    onFocus={(e) => handleTrainingMaxFocus(e, ex)}
+                    onChange={(e) => handleTrainingMaxChange(e, ex.id)}
+                    onBlur={() => handleTrainingMaxBlur(ex.id)}
                     inputMode="decimal"
                     pattern="[0-9]*"
                     className="w-20 bg-gym-bg text-right text-white font-mono p-2 rounded-lg border border-gym-border focus:border-gym-accent focus:outline-none no-spinner"

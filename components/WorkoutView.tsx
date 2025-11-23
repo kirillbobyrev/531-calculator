@@ -100,15 +100,10 @@ export const WorkoutView: React.FC<WorkoutViewProps> = ({ settings, setSettings 
             {isExpanded && (
               <div className="p-4 animate-in slide-in-from-top-2 duration-200">
                   <div className="space-y-2">
-                      {sets.map((set, idx) => (
+                        {sets.map((set, idx) => (
                           <div 
-                              key={idx} 
-                              className={`
-                                  flex items-center justify-between p-3 rounded-lg border 
-                                  ${set.reps.toString().includes('+') 
-                                      ? 'bg-blue-900/10 border-blue-800/50 text-blue-100' 
-                                      : 'bg-gym-bg border-gym-border text-gym-text'}
-                              `}
+                            key={idx} 
+                            className="flex items-center justify-between p-3 rounded-lg border bg-gym-bg border-gym-border text-gym-text"
                           >
                                <div className="flex flex-col">
                                   <span className="text-xs text-gym-muted opacity-70">Set {idx + 1}</span>
@@ -118,9 +113,9 @@ export const WorkoutView: React.FC<WorkoutViewProps> = ({ settings, setSettings 
                                    <span className="text-xl font-bold font-mono tracking-tighter">{set.weight}</span>
                                    <span className="text-xs text-gym-muted">{settings.unit}</span>
                                </div>
-                               <div className="w-16 text-right">
-                                  <span className={`text-lg font-bold ${set.reps.toString().includes('+') ? 'text-gym-accent' : ''}`}>
-                                      x{set.reps}
+                                 <div className="w-16 text-right">
+                                  <span className="text-lg font-bold">
+                                    x{set.reps}
                                   </span>
                                </div>
                           </div>
