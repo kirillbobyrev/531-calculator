@@ -119,7 +119,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
                     type="number"
                     value={ex.trainingMax}
                     onChange={(e) => updateExercise(ex.id, 'trainingMax', parseFloat(e.target.value) || 0)}
-                    className="w-20 bg-gym-bg text-right text-white font-mono p-2 rounded-lg border border-gym-border focus:border-gym-accent focus:outline-none"
+                    inputMode="decimal"
+                    pattern="[0-9]*"
+                    className="w-20 bg-gym-bg text-right text-white font-mono p-2 rounded-lg border border-gym-border focus:border-gym-accent focus:outline-none no-spinner"
                   />
                 </div>
                 <button

@@ -40,6 +40,18 @@
       width: 0px;
       background: transparent;
     }
+
+    /* Remove native number input spinners on desktop browsers */
+    input[type=number].no-spinner::-webkit-outer-spin-button,
+    input[type=number].no-spinner::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number].no-spinner {
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
   </style>
   <script type="importmap">
 {
