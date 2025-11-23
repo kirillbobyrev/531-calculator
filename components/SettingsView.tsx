@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { UserSettings, Exercise } from '../types';
-import { Plus, Trash2, GripVertical } from 'lucide-react';
+import { Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface SettingsViewProps {
   settings: UserSettings;
@@ -8,9 +8,6 @@ interface SettingsViewProps {
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSettings }) => {
-
-  const dragItem = useRef<number | null>(null);
-  const dragOverItem = useRef<number | null>(null);
 
   const updateExercise = (id: string, field: keyof Exercise, value: string | number) => {
     const newExercises = settings.exercises.map((ex) => {
@@ -38,34 +35,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
     });
   };
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, position: number) => {
-    dragItem.current = position;
-    // Needed for mobile drag preview sometimes, or just standard behavior
-    e.dataTransfer.effectAllowed = "move";
-    // Make the drag ghost cleaner if desired, but default is fine for now
-  };
-
-  const handleDragEnter = (position: number) => {
-    dragOverItem.current = position;
-  };
-
-  const handleDragEnd = () => {
-    if (dragItem.current === null || dragOverItem.current === null) {
-      dragItem.current = null;
-      dragOverItem.current = null;
+  const moveExercise = (from: number, to: number) => {
+    if (
+      from === to ||
+      from < 0 ||
+      to < 0 ||
+      from >= settings.exercises.length ||
+      to >= settings.exercises.length
+    ) {
       return;
     }
 
-    const copyListItems = [...settings.exercises];
-    const dragItemContent = copyListItems[dragItem.current];
+    const updatedExercises = [...settings.exercises];
+    const [item] = updatedExercises.splice(from, 1);
+    updatedExercises.splice(to, 0, item);
 
-    copyListItems.splice(dragItem.current, 1);
-    copyListItems.splice(dragOverItem.current, 0, dragItemContent);
-
-    dragItem.current = null;
-    dragOverItem.current = null;
-
-    setSettings({ ...settings, exercises: copyListItems });
+    setSettings({ ...settings, exercises: updatedExercises });
   };
 
   return (
@@ -88,16 +73,28 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
             <div
               key={ex.id}
               className="bg-gym-card p-4 rounded-xl border border-gym-border flex items-center gap-4 group"
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnter={() => handleDragEnter(index)}
-              onDragEnd={handleDragEnd}
-              onDragOver={(e) => e.preventDefault()}
             >
 
-              {/* Drag Handle */}
-              <div className="cursor-grab active:cursor-grabbing text-gym-muted hover:text-white touch-none">
-                <GripVertical className="w-5 h-5" />
+              {/* Reorder Buttons */}
+              <div className="flex flex-col items-center gap-1 text-gym-muted">
+                <button
+                  type="button"
+                  onClick={() => moveExercise(index, index - 1)}
+                  disabled={index === 0}
+                  className="p-1 rounded-md border border-transparent hover:border-gym-border hover:text-white disabled:opacity-30 disabled:hover:border-transparent"
+                  aria-label="Move exercise up"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveExercise(index, index + 1)}
+                  disabled={index === settings.exercises.length - 1}
+                  className="p-1 rounded-md border border-transparent hover:border-gym-border hover:text-white disabled:opacity-30 disabled:hover:border-transparent"
+                  aria-label="Move exercise down"
+                >
+                  <ArrowDown className="w-4 h-4" />
+                </button>
               </div>
 
               <div className="flex-1 space-y-1">
