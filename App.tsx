@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Settings, Dumbbell } from 'lucide-react';
 import { UserSettings, DEFAULT_SETTINGS } from './types';
 import { SettingsView } from './components/SettingsView';
