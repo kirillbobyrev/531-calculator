@@ -115,11 +115,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
 
       {/* Lifts Configuration */}
       <section className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-white">Training Max (TM) Inputs</h2>
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-xl font-bold text-white">Your Lifts</h2>
           <button
             onClick={addExercise}
-            className="p-2 bg-gym-card border border-gym-border rounded-full hover:bg-gym-border transition-colors"
+            className="p-3 bg-gym-card border border-gym-border rounded-xl hover:bg-gym-border transition-colors active:scale-95"
+            aria-label="Add exercise"
           >
             <Plus className="w-5 h-5 text-gym-accent" />
           </button>
@@ -129,16 +130,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
           {settings.exercises.map((ex, index) => (
             <div
               key={ex.id}
-              className="bg-gym-card p-4 rounded-xl border border-gym-border flex items-center gap-4 group"
+              className="bg-gym-card p-5 rounded-2xl border border-gym-border flex items-center gap-4 group"
             >
 
               {/* Reorder Buttons */}
-              <div className="flex flex-col items-center gap-1 text-gym-muted">
+              <div className="flex flex-col items-center gap-1.5 text-gym-muted">
                 <button
                   type="button"
                   onClick={() => moveExercise(index, index - 1)}
                   disabled={index === 0}
-                  className="p-1 rounded-md border border-transparent hover:border-gym-border hover:text-white disabled:opacity-30 disabled:hover:border-transparent"
+                  className="p-1.5 rounded-lg border border-transparent hover:border-gym-border hover:bg-gym-bg hover:text-white disabled:opacity-30 disabled:hover:border-transparent disabled:hover:bg-transparent active:scale-90 transition-all"
                   aria-label="Move exercise up"
                 >
                   <ArrowUp className="w-4 h-4" />
@@ -147,46 +148,46 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
                   type="button"
                   onClick={() => moveExercise(index, index + 1)}
                   disabled={index === settings.exercises.length - 1}
-                  className="p-1 rounded-md border border-transparent hover:border-gym-border hover:text-white disabled:opacity-30 disabled:hover:border-transparent"
+                  className="p-1.5 rounded-lg border border-transparent hover:border-gym-border hover:bg-gym-bg hover:text-white disabled:opacity-30 disabled:hover:border-transparent disabled:hover:bg-transparent active:scale-90 transition-all"
                   aria-label="Move exercise down"
                 >
                   <ArrowDown className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="flex-1 space-y-1">
+              <div className="flex-1 space-y-2">
                 <input
                   type="text"
                   value={ex.name}
                   onChange={(e) => updateExercise(ex.id, 'name', e.target.value)}
-                  className="w-full bg-transparent text-white font-semibold focus:outline-none focus:text-gym-accent placeholder-gym-muted/50"
+                  className="w-full bg-transparent text-white text-lg font-semibold focus:outline-none focus:text-gym-accent placeholder-gym-muted/50"
                   placeholder="Exercise Name"
                 />
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gym-muted uppercase tracking-wider">Training Max</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-gym-muted uppercase tracking-wider font-medium">TM</span>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={tmDrafts[ex.id] ?? ex.trainingMax.toString()}
+                      onFocus={(e) => handleTrainingMaxFocus(e, ex)}
+                      onChange={(e) => handleTrainingMaxChange(e, ex.id)}
+                      onBlur={() => handleTrainingMaxBlur(ex.id)}
+                      inputMode="decimal"
+                      pattern="[0-9]*"
+                      className="w-24 bg-gym-bg text-white font-mono text-base p-2.5 rounded-lg border border-gym-border focus:border-gym-accent focus:outline-none no-spinner"
+                    />
+                  </div>
+                  <span className="text-sm text-gym-muted font-medium">{settings.unit}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={tmDrafts[ex.id] ?? ex.trainingMax.toString()}
-                    onFocus={(e) => handleTrainingMaxFocus(e, ex)}
-                    onChange={(e) => handleTrainingMaxChange(e, ex.id)}
-                    onBlur={() => handleTrainingMaxBlur(ex.id)}
-                    inputMode="decimal"
-                    pattern="[0-9]*"
-                    className="w-20 bg-gym-bg text-right text-white font-mono p-2 rounded-lg border border-gym-border focus:border-gym-accent focus:outline-none no-spinner"
-                  />
-                </div>
-                <button
-                  onClick={() => removeExercise(ex.id)}
-                  className="p-2 text-gym-muted hover:text-red-400 transition-colors"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
+              <button
+                onClick={() => removeExercise(ex.id)}
+                className="p-2.5 text-gym-muted hover:text-red-400 transition-colors active:scale-90"
+                aria-label="Remove exercise"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
             </div>
           ))}
         </div>
@@ -194,29 +195,29 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, setSetting
 
       {/* Unit & Rounding */}
       <section className="space-y-4">
-        <h2 className="text-lg font-bold text-white">Preferences</h2>
+        <h2 className="text-xl font-bold text-white">Preferences</h2>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gym-card p-3 rounded-xl border border-gym-border">
-            <label className="text-xs text-gym-muted block mb-2">Unit</label>
+          <div className="bg-gym-card p-4 rounded-2xl border border-gym-border">
+            <label className="text-sm text-gym-muted font-medium block mb-3">Unit</label>
             <select
               value={settings.unit}
               onChange={(e) => setSettings({ ...settings, unit: e.target.value as 'kg' | 'lbs' })}
-              className="w-full bg-gym-bg text-white p-2 rounded-lg outline-none border border-gym-border"
+              className="w-full bg-gym-bg text-white text-base font-medium p-3 rounded-xl outline-none border border-gym-border focus:border-gym-accent transition-colors"
             >
-              <option value="kg">KG</option>
-              <option value="lbs">LBS</option>
+              <option value="kg">Kilograms (kg)</option>
+              <option value="lbs">Pounds (lbs)</option>
             </select>
           </div>
-          <div className="bg-gym-card p-3 rounded-xl border border-gym-border">
-            <label className="text-xs text-gym-muted block mb-2">Rounding</label>
+          <div className="bg-gym-card p-4 rounded-2xl border border-gym-border">
+            <label className="text-sm text-gym-muted font-medium block mb-3">Rounding</label>
             <select
               value={settings.rounding}
               onChange={(e) => setSettings({ ...settings, rounding: parseFloat(e.target.value) })}
-              className="w-full bg-gym-bg text-white p-2 rounded-lg outline-none border border-gym-border"
+              className="w-full bg-gym-bg text-white text-base font-medium p-3 rounded-xl outline-none border border-gym-border focus:border-gym-accent transition-colors"
             >
-              <option value="1">1</option>
-              <option value="2.5">2.5</option>
-              <option value="5">5</option>
+              <option value="1">1 {settings.unit}</option>
+              <option value="2.5">2.5 {settings.unit}</option>
+              <option value="5">5 {settings.unit}</option>
             </select>
           </div>
         </div>
