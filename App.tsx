@@ -43,7 +43,7 @@ function App() {
       <div className="max-w-md mx-auto min-h-screen relative flex flex-col">
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 sm:p-6 pb-28">
+        <main className="flex-1 p-4 sm:p-6 pb-32">
           {view === 'WORKOUT' ? (
             <WorkoutView settings={settings} setSettings={setSettings} />
           ) : (
@@ -52,25 +52,25 @@ function App() {
         </main>
 
         {/* Bottom Navigation Bar */}
-        <nav className="fixed bottom-0 left-0 right-0 border-t border-gym-border bg-gym-bg/90 backdrop-blur-lg z-50">
+        <nav className="fixed bottom-0 left-0 right-0 border-t border-gym-border bg-gym-bg/95 backdrop-blur-lg z-50">
           <div className="max-w-md mx-auto px-4 pb-[max(env(safe-area-inset-bottom),0px)]">
-            <div className="grid grid-cols-2 py-2">
+            <div className="grid grid-cols-2 py-3">
               <button
                 onClick={() => setView('WORKOUT')}
-                className={`flex flex-col items-center justify-center gap-1 transition-colors ${view === 'WORKOUT' ? 'text-gym-accent' : 'text-gym-muted hover:text-white'
+                className={`flex flex-col items-center justify-center gap-1.5 py-2 transition-all active:scale-95 ${view === 'WORKOUT' ? 'text-gym-accent' : 'text-gym-muted hover:text-white'
                   }`}
               >
-                <Dumbbell className={`w-6 h-6 ${view === 'WORKOUT' ? 'fill-current' : ''}`} />
-                <span className="text-xs font-medium">Workout</span>
+                <Dumbbell className={`w-7 h-7 ${view === 'WORKOUT' ? 'fill-current' : ''}`} />
+                <span className="text-sm font-semibold">Workout</span>
               </button>
 
               <button
                 onClick={() => setView('SETTINGS')}
-                className={`flex flex-col items-center justify-center gap-1 transition-colors ${view === 'SETTINGS' ? 'text-gym-accent' : 'text-gym-muted hover:text-white'
+                className={`flex flex-col items-center justify-center gap-1.5 py-2 transition-all active:scale-95 ${view === 'SETTINGS' ? 'text-gym-accent' : 'text-gym-muted hover:text-white'
                   }`}
               >
-                <Settings className={`w-6 h-6 ${view === 'SETTINGS' ? 'animate-spin-slow' : ''}`} />
-                <span className="text-xs font-medium">Settings</span>
+                <Settings className={`w-7 h-7 ${view === 'SETTINGS' ? 'animate-spin-slow' : ''}`} />
+                <span className="text-sm font-semibold">Settings</span>
               </button>
             </div>
           </div>

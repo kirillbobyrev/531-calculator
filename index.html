@@ -37,6 +37,11 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
     /* Hide scrollbar for cleaner mobile look */
     ::-webkit-scrollbar {
       width: 0px;
@@ -53,6 +58,19 @@
     input[type=number].no-spinner {
       appearance: textfield;
       -moz-appearance: textfield;
+    }
+
+    /* Better focus states for accessibility */
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #2563eb;
+      outline-offset: 2px;
+    }
+
+    /* Tabular numbers for consistent weight display */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
     }
   </style>
   <script type="importmap">
